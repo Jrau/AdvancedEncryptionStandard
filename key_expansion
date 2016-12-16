@@ -1,0 +1,25 @@
+"""
+Key: a nk*nb block used to create the word array
+nk: Number of keys in the array. (Depends on AES-128/192/256)
+nr: Number of rounds (Depends on AES)
+nb: Number of Blocks. In AES 128/192/256 this is 4. Can change in different AES
+
+"""
+def key_expansion(key, nk, nr = 10, nb = 4):
+    word = []
+    i = 0
+    t_word = []
+    while (i < nk):
+        word += [[key[i][0], key[(i)][1], key[(i)][2], key[i][3]]]
+        i += 1
+    i = nk
+    while (i < nb * (nr+1)):
+        temp = word[i-1]
+        if (i % nk == 0):
+            temp = ls_xor(sub_word(rot_word(temp)), [Rcon[i//nk], 0, 0, 0])
+        elif(nk > 6 and i % nk == 4):
+            temp = sub_word(temp)
+        temp = ls_xor(word[i-nk], temp)
+        word += [temp]
+        i += 1
+    return word
